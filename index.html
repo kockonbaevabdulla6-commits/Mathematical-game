@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Математикалык Викторина</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        /* Start Screen */
+        .start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .start-screen.hidden {
+            display: none;
+        }
+
+        .start-emoji {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .start-title {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .start-description {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .stats {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #999;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-start:active {
+            transform: translateY(-1px);
+        }
+
+        .difficulty-selector {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .difficulty-title {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .difficulty-options {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn.easy {
+            color: #51cf66;
+            border-color: #51cf66;
+        }
+
+        .difficulty-btn.easy:hover {
+            background: #d3f9d8;
+        }
+
+        .difficulty-btn.medium {
+            color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .difficulty-btn.medium:hover {
+            background: #fff3cd;
+        }
+
+        .difficulty-btn.hard {
+            color: #ff6b6b;
+            border-color: #ff6b6b;
+        }
+
+        .difficulty-btn.hard:hover {
+            background: #ffe0e0;
+        }
+
+        .difficulty-btn.selected {
+            background: currentColor;
+            color: white;
+            font-weight: bold;
+        }
+
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .info-bar.hidden {
+            display: none;
+        }
+
+        .info-item {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .info-label {
+            font-size: 0.8em;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .timer.warning {
+            color: #ff6b6b;
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question-container.hidden {
+            display: none;
+        }
+
+        .question-number {
+            color: #999;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            background: #f9f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .math-equation {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        .options {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            background: #f9f9ff;
+            transform: translateX(5px);
+        }
+
+        .option-btn .letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct {
+            border-color: #51cf66;
+            background: #d3f9d8;
+        }
+
+        .option-btn.correct .letter {
+            background: #51cf66;
+        }
+
+        .option-btn.incorrect {
+            border-color: #ff6b6b;
+            background: #ffe0e0;
+        }
+
+        .option-btn.incorrect .letter {
+            background: #ff6b6b;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .answer-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .answer-input.correct {
+            border-color: #51cf66;
+            background: #d3f9d8;
+        }
+
+        .answer-input.incorrect {
+            border-color: #ff6b6b;
+            background: #ffe0e0;
+        }
+
+        .submit-btn {
+            padding: 12px 25px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d3f9d8;
+            color: #2d6a32;
+            border-left: 4px solid #51cf66;
+        }
+
+        .feedback.incorrect {
+            background: #ffe0e0;
+            color: #7d2020;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .hint {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .hint.show {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar.hidden {
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-next {
+            background: #667eea;
+            color: white;
+            display: none;
+        }
+
+        .btn-next:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-next.show {
+            display: block;
+        }
+
+        .btn-hint {
+            background: #ffc107;
+            color: #333;
+            display: none;
+            flex: 0.5;
+        }
+
+        .btn-hint:hover {
+            background: #ffb300;
+            transform: translateY(-2px);
+        }
+
+        .btn-hint.show {
+            display: block;
+        }
+
+        .btn-hint.used {
+            background: #ddd;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-restart {
+            background: #667eea;
+            color: white;
+            display: none;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .btn-restart:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-restart.show {
+            display: block;
+        }
+
+        .results-container {
+            display: none;
+            text-align: center;
+        }
+
+        .results-container.show {
+            display: block;
+        }
+
+        .final-score {
+            font-size: 4em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .results-text {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .score-detail {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .score-detail p {
+            margin: 10px 0;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .emoji {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+
+        .question-type {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .difficulty {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .difficulty.easy {
+            background: #51cf66;
+        }
+
+        .difficulty.medium {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .difficulty.hard {
+            background: #ff6b6b;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .question-text {
+                font-size: 1.1em;
+            }
+
+            .math-equation {
+                font-size: 1.2em;
+            }
+
+            .option-btn {
+                padding: 12px 15px;
+            }
+
+            .input-area {
+                flex-direction: column;
+            }
+
+            .submit-btn {
+                width: 100%;
+            }
+
+            .info-bar {
+                gap: 10px;
+            }
+
+            .info-item {
+                min-width: 100px;
+            }
+
+            .start-emoji {
+                font-size: 3em;
+            }
+
+            .start-title {
+                font-size: 1.5em;
+            }
+
+            .btn-start {
+                padding: 15px 30px;
+                font-size: 1em;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div class="start-screen" id="start-screen">
+            <div class="start-emoji">🔢</div>
+            <div class="start-title">Математикалык Викторина</div>
+            <div class="start-description">
+                Өзүңүздүн математикалык сөз жүргүчүңүздү сынап көрүңүз!<br>
+                15 суроо, 3 деңгээлдүүлүк кыйынчылык жана таймер менен жарыш.
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Суроолор</div>
+                    <div class="stat-value">15</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Убакыт</div>
+                    <div class="stat-value">15м</div>
+                </div>
+            </div>
+
+            <div class="difficulty-selector">
+                <div class="difficulty-title">📊 Кыйынчылык деңгээлин тандаңыз:</div>
+                <div class="difficulty-options">
+                    <button class="difficulty-btn easy" onclick="setDifficulty('all')">🟢 Баары</button>
+                    <button class="difficulty-btn easy" onclick="setDifficulty('easy')">🟢 Жеңил</button>
+                    <button class="difficulty-btn medium" onclick="setDifficulty('medium')">🟡 Орточо</button>
+                    <button class="difficulty-btn hard" onclick="setDifficulty('hard')">🔴 Кыйын</button>
+                </div>
+            </div>
+
+            <button class="btn-start" onclick="startQuiz()">🚀 Баштоо</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <h1 id="quiz-title" style="display: none;">🔢 Математикалык Викторина</h1>
+        <p class="subtitle" id="quiz-subtitle" style="display: none;">Математикалык сөз жүргүчүң сынап көрүңүз!</p>
+
+        <div class="info-bar hidden" id="info-bar">
+            <div class="info-item">
+                <div class="info-label">Суроо</div>
+                <div class="info-value"><span id="current-question">1</span>/<span id="total-questions">15</span></div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Упай</div>
+                <div class="info-value"><span id="score">0</span>/<span id="max-score">15</span></div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Убакыт</div>
+                <div class="info-value timer" id="timer">⏱ <span id="time">900</span>с</div>
+            </div>
+        </div>
+
+        <div class="progress-bar hidden" id="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+
+        <div class="question-container hidden" id="question-container">
+            <div class="question-number" id="question-number"></div>
+            <div>
+                <span class="question-type" id="question-type"></span>
+                <span class="difficulty" id="difficulty"></span>
+            </div>
+            <div class="question-text" id="question-text"></div>
+            <div class="math-equation" id="math-equation"></div>
+            
+            <!-- Вариянттар берилген суроолор -->
+            <ul class="options" id="options"></ul>
+
+            <!-- Текст кирүүсү берилген суроолор -->
+            <div class="input-area" id="input-area" style="display: none;">
+                <input type="text" class="answer-input" id="answer-input" placeholder="Жоопту жаз..." autocomplete="off">
+                <button class="submit-btn" id="submit-btn">Жөнөт</button>
+            </div>
+
+            <button class="btn btn-hint" id="hint-btn">💡 Намүнө</button>
+            <div class="hint" id="hint"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <div class="results-container" id="results-container">
+            <div class="emoji" id="emoji">😊</div>
+            <div class="final-score" id="final-score"></div>
+            <div class="results-text" id="results-text"></div>
+            <div class="score-detail">
+                <p id="score-detail"></p>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn btn-next" id="next-btn">➜ Кийинки суроо</button>
+        </div>
+
+        <button class="btn btn-restart" id="restart-btn">🔄 Кайра баштоо</button>
+    </div>
+
+    <script>
+        const allQuestions = [
+            {
+                type: "varkymdar",
+                difficulty: "easy",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "5 + 3 = ?",
+                options: ["7", "8", "9", "10"],
+                answer: 1,
+                hint: "Бирдей жана үчтүү кошуңуз"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "easy",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "12 - 5 = ?",
+                options: ["6", "7", "8", "9"],
+                answer: 1,
+                hint: "12 төөнүн 5 санын алыңыз"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "easy",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "6 × 4 = ?",
+                options: ["20", "22", "24", "26"],
+                answer: 2,
+                hint: "6 четтиме төрттү көбөйтүңүз"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "easy",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "20 ÷ 5 = ?",
+                options: ["3", "4", "5", "6"],
+                answer: 1,
+                hint: "20 төөнүн 5 саны канча жолу кирет?"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "easy",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "15 + 10 = ?",
+                options: ["20", "25", "30", "35"],
+                answer: 1,
+                hint: "Он бешке он кошуңуз"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "medium",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "7² = ?",
+                options: ["42", "47", "49", "51"],
+                answer: 2,
+                hint: "7ди өзүнө көбөйтүңүз"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "medium",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "√64 = ?",
+                options: ["6", "7", "8", "9"],
+                answer: 2,
+                hint: "Кайсы сан өзүнө көбөйтүлсө 64 чыга?"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "medium",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "15 + 8 × 2 = ?",
+                options: ["31", "46", "37", "39"],
+                answer: 0,
+                hint: "Эсептөөнүн ырааты: адегенде көбөйтүүнүн, анан кошуунун"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "medium",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "(10 + 5) × 2 = ?",
+                options: ["20", "25", "30", "35"],
+                answer: 2,
+                hint: "Кашелеги ичинде адегенде эсептеп, анан көбөйтүңүз"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "medium",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "25% × 40 = ?",
+                options: ["8", "10", "12", "15"],
+                answer: 1,
+                hint: "25% - бул чейектен бир бөлүк (1/4)"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "hard",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "2³ + 3² = ?",
+                options: ["13", "15", "17", "19"],
+                answer: 2,
+                hint: "2³ = 8, 3² = 9, ошондо кошуңуз"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "hard",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "|-15 + 8| = ?",
+                options: ["7", "-7", "23", "15"],
+                answer: 0,
+                hint: "Модуль (абсолюттук маани) - сан канча чегинде экенин билдирет"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "hard",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "5! = ?",
+                options: ["100", "120", "150", "200"],
+                answer: 1,
+                hint: "5! = 5 × 4 × 3 × 2 × 1"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "hard",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "2x + 3 = 11, x = ?",
+                options: ["2", "3", "4", "5"],
+                answer: 2,
+                hint: "Адегенде 11 - 3 = 8, анан 8 ÷ 2 = 4"
+            },
+            {
+                type: "varkymdar",
+                difficulty: "hard",
+                question: "Төмөнкү теңдеменин жообун тап:",
+                equation: "log₂(16) = ?",
+                options: ["2", "3", "4", "5"],
+                answer: 2,
+                hint: "2 канча жолу өзүнө көбөйтүлсө 16 чыга? 2⁴ = 16"
+            }
+        ];
+
+        let questions = [];
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+        let timeLeft = 900;
+        let timerInterval = null;
+        let hintUsed = false;
+        let selectedDifficulty = 'all';
+        let totalQuestions = 15;
+
+        function setDifficulty(level) {
+            selectedDifficulty = level;
+            
+            // Кнопканы окрасить
+            document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            const buttons = document.querySelectorAll('.difficulty-btn');
+            buttons.forEach(btn => {
+                if (level === 'all' && btn.textContent.includes('Баары')) {
+                    btn.classList.add('selected');
+                } else if (level === 'easy' && btn.textContent.includes('Жеңил')) {
+                    btn.classList.add('selected');
+                } else if (level === 'medium' && btn.textContent.includes('Орточо')) {
+                    btn.classList.add('selected');
+                } else if (level === 'hard' && btn.textContent.includes('Кыйын')) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+
+        function filterQuestionsByDifficulty() {
+            if (selectedDifficulty === 'all') {
+                questions = [...allQuestions];
+            } else {
+                questions = allQuestions.filter(q => q.difficulty === selectedDifficulty);
+            }
+            totalQuestions = questions.length;
+        }
+
+        function startQuiz() {
+            filterQuestionsByDifficulty();
+            
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-title').style.display = 'block';
+            document.getElementById('quiz-subtitle').style.display = 'block';
+            document.getElementById('info-bar').classList.remove('hidden');
+            document.getElementById('progress-bar').classList.remove('hidden');
+
+            document.getElementById('max-score').textContent = totalQuestions;
+            document.getElementById('total-questions').textContent = totalQuestions;
+
+            currentQuestion = 0;
+            score = 0;
+            answered = false;
+            timeLeft = Math.ceil(totalQuestions * 60);
+            document.getElementById('score').textContent = 0;
+            document.getElementById('question-container').classList.remove('hidden');
+            document.getElementById('results-container').classList.remove('show');
+            document.getElementById('restart-btn').classList.remove('show');
+            
+            loadQuestion();
+            startTimer();
+        }
+
+        function loadQuestion() {
+            if (currentQuestion >= totalQuestions) {
+                endQuiz();
+                return;
+            }
+
+            answered = false;
+            hintUsed = false;
+            const question = questions[currentQuestion];
+
+            document.getElementById('question-number').textContent = `Суроо ${currentQuestion + 1}/${totalQuestions}`;
+            document.getElementById('question-text').textContent = question.question;
+            document.getElementById('math-equation').textContent = question.equation;
+            document.getElementById('current-question').textContent = currentQuestion + 1;
+            document.getElementById('feedback').classList.remove('show', 'correct', 'incorrect');
+            document.getElementById('hint').classList.remove('show');
+            document.getElementById('next-btn').classList.remove('show');
+            document.getElementById('hint-btn').classList.remove('used');
+            document.getElementById('hint-btn').classList.add('show');
+
+            // Суроо типи жана кыйынчылыгын көрсөт
+            const typeLabel = question.type === 'varkymdar' ? '📋 Вариянттуу' : '✍️ Жазуу';
+            document.getElementById('question-type').textContent = typeLabel;
+            
+            const diffLabel = question.difficulty === 'easy' ? 'Жеңил' : question.difficulty === 'medium' ? 'Орточо' : 'Кыйын';
+            const diffClass = question.difficulty;
+            const diffElement = document.getElementById('difficulty');
+            diffElement.textContent = diffLabel;
+            diffElement.className = `difficulty ${diffClass}`;
+
+            // Вариянттуу суроо
+            if (question.type === 'varkymdar') {
+                document.getElementById('options').style.display = 'flex';
+                document.getElementById('input-area').style.display = 'none';
+
+                const optionsContainer = document.getElementById('options');
+                optionsContainer.innerHTML = '';
+
+                question.options.forEach((option, index) => {
+                    const li = document.createElement('li');
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerHTML = `<span class="letter">${String.fromCharCode(65 + index)}</span> ${option}`;
+                    btn.onclick = () => selectOption(index, btn);
+                    li.appendChild(btn);
+                    optionsContainer.appendChild(li);
+                });
+            }
+
+            updateProgress();
+        }
+
+        function selectOption(index, button) {
+            if (answered) return;
+
+            answered = true;
+            const question = questions[currentQuestion];
+            const isCorrect = index === question.answer;
+
+            const allButtons = document.querySelectorAll('.option-btn');
+            allButtons.forEach(btn => btn.disabled = true);
+
+            if (isCorrect) {
+                score++;
+                document.getElementById('score').textContent = score;
+                button.classList.add('correct');
+                showFeedback('✓ Туура жооп! Жакшы иштеңиз!', 'correct');
+            } else {
+                button.classList.add('incorrect');
+                const correctBtn = Array.from(allButtons)[question.answer];
+                correctBtn.classList.add('correct');
+                showFeedback(`✗ Каталуу жооп. Туура жооп: ${question.options[question.answer]}`, 'incorrect');
+            }
+
+            document.getElementById('hint-btn').classList.remove('show');
+            document.getElementById('next-btn').classList.add('show');
+        }
+
+        function showHint() {
+            if (!answered && !hintUsed) {
+                hintUsed = true;
+                const hint = document.getElementById('hint');
+                hint.textContent = '💡 ' + questions[currentQuestion].hint;
+                hint.classList.add('show');
+                document.getElementById('hint-btn').classList.add('used');
+                document.getElementById('hint-btn').disabled = true;
+            }
+        }
+
+        function showFeedback(message, type) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.classList.add('show', type);
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / totalQuestions) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const timerElement = document.getElementById('timer');
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `⏱ ${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft <= 60) {
+                timerElement.classList.add('warning');
+            } else {
+                timerElement.classList.remove('warning');
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById('question-container').classList.add('hidden');
+            document.getElementById('next-btn').classList.remove('show');
+
+            const percentage = (score / totalQuestions) * 100;
+            let emoji = '😢';
+            let resultText = '';
+
+            if (percentage === 100) {
+                emoji = '🏆';
+                resultText = 'Кемчиликсиз натыйжа! Сиз математикалык гений!';
+            } else if (percentage >= 80) {
+                emoji = '😍';
+                resultText = 'Супер! Сиз абзалдыксыз, дагы жакшартса болот!';
+            } else if (percentage >= 60) {
+                emoji = '😊';
+                resultText = 'Жакшы натыйжа! Дагы практика кылсаңыз, эффект болот!';
+            } else if (percentage >= 40) {
+                emoji = '😐';
+                resultText = 'Орточолук. Математикалык сөз жүргүчүңүздү өнүктүрүңүз!';
+            } else {
+                emoji = '😞';
+                resultText = 'Дагы ча��данчы натыйжа. Кайра аракет кылыңыз!';
+            }
+
+            document.getElementById('emoji').textContent = emoji;
+            document.getElementById('final-score').textContent = `${score}/${totalQuestions}`;
+            document.getElementById('results-text').textContent = resultText;
+            document.getElementById('score-detail').textContent = `Сиз ${percentage.toFixed(0)}% туура жооп бердиңиз`;
+
+            document.getElementById('results-container').classList.add('show');
+            document.getElementById('restart-btn').classList.add('show');
+        }
+
+        document.getElementById('hint-btn').addEventListener('click', showHint);
+        document.getElementById('next-btn').addEventListener('click', nextQuestion);
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').classList.remove('hidden');
+            document.getElementById('quiz-title').style.display = 'none';
+            document.getElementById('quiz-subtitle').style.display = 'none';
+            document.getElementById('info-bar').classList.add('hidden');
+            document.getElementById('progress-bar').classList.add('hidden');
+            document.getElementById('question-container').classList.add('hidden');
+            document.getElementById('results-container').classList.remove('show');
+            document.getElementById('restart-btn').classList.remove('show');
+            setDifficulty('all');
+        });
+
+        // Баштапкы кыйынчылык тандоо
+        setDifficulty('all');
+    </script>
+</body>
+</html>
