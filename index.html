@@ -3,93 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kyrgyz Mathematical Quiz</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <title>Киргиз математикалык суроолор</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .hint { color: gray; font-size: 0.8em; }
+        .question { margin-bottom: 20px; }
+        .correct { color: green; }
+        .incorrect { color: red; }
+    </style>
 </head>
 <body>
-    <div class="quiz-container">
-        <h1>Kyrgyz Mathematical Quiz</h1>
-        <div id="timer">Time Left: <span id="time">60</span> seconds</div>
-        <div id="score">Score: <span id="score-value">0</span></div>
-        <div id="question">Question will appear here</div>
-        <div class="options">
-            <button class="option">Option 1</button>
-            <button class="option">Option 2</button>
-            <button class="option">Option 3</button>
-            <button class="option">Option 4</button>
-        </div>
-        <button id="hint" onclick="showHint()">Show Hint</button>
+    <h1>Киргиз Математикалык Суроолор</h1>
+    <div class="question">
+        <p>1. 5 + 3?</p>
+        <input type="text" id="answer1">
+        <span class="hint">(Жооп: 8)</span>
     </div>
+    <div class="question">
+        <p>2. 10 - 4?</p>
+        <input type="text" id="answer2">
+        <span class="hint">(Жооп: 6)</span>
+    </div>
+    <div class="question">
+        <p>3. 6 * 7?</p>
+        <input type="text" id="answer3">
+        <span class="hint">(Жооп: 42)</span>
+    </div>
+    <button onclick="checkAnswers()">Текшерүү</button>
+    <div id="result"></div>
     <script>
-        let questions = [
-            { question: "1 + 1 = ?", options: ["1", "2", "3", "4"], answer: "2", difficulty: "easy" },
-            { question: "2 + 2 = ?", options: ["2", "3", "4", "5"], answer: "4", difficulty: "easy" },
-            { question: "5 * 5 = ?", options: ["20", "25", "30", "35"], answer: "25", difficulty: "medium" },
-            { question: "10 / 2 = ?", options: ["3", "4", "5", "6"], answer: "5", difficulty: "medium" },
-            { question: "15 - 5 = ?", options: ["10", "11", "12", "13"], answer: "10", difficulty: "medium" },
-            { question: "8 * 7 = ?", options: ["54", "56", "58", "60"], answer: "56", difficulty: "hard" },
-            { question: "12 + 15 = ?", options: ["25", "26", "27", "28"], answer: "27", difficulty: "hard" },
-            { question: "√16 = ?", options: ["2", "4", "6", "8"], answer: "4", difficulty: "easy" },
-            { question: "3^3 = ?", options: ["6", "9", "27", "30"], answer: "27", difficulty: "hard" },
-            { question: "18 - 9 = ?", options: ["7", "8", "9", "10"], answer: "9", difficulty: "easy" },
-            { question: "20 / 4 = ?", options: ["5", "6", "7", "8"], answer: "5", difficulty: "easy" },
-            { question: "7 + 8 = ?", options: ["14", "15", "16", "17"], answer: "15", difficulty: "easy" },
-            { question: "9 * 9 = ?", options: ["72", "81", "90", "100"], answer: "81", difficulty: "medium" },
-            { question: "25 % of 200 = ?", options: ["30", "40", "50", "60"], answer: "50", difficulty: "medium" },
-            { question: "| -5 | = ?", options: ["-5", "0", "5", "10"], answer: "5", difficulty: "hard" },
-            { question: "Is 11 a prime number? (true/false)", options: ["true", "false"], answer: "true", difficulty: "hard" }
-        ];
-        let score = 0;
-        let timeLeft = 60;
-        let currentQuestionIndex = 0;
-        let timer;
-
-        function startQuiz() {
-            timer = setInterval(updateTimer, 1000);
-            nextQuestion();
-        }
-
-        function updateTimer() {
-            timeLeft--;
-            document.getElementById('time').innerText = timeLeft;
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                alert('Time is up! Your score is: ' + score);
+        function checkAnswers() {
+            const answers = [8, 6, 42];
+            let correct = 0;
+            for (let i = 0; i < answers.length; i++) {
+                const userAnswer = document.getElementById(`answer${i + 1}`).value;
+                if (parseInt(userAnswer) === answers[i]) {
+                    correct++;
+                    document.getElementById(`answer${i + 1}`).classList.add('correct');
+                } else {
+                    document.getElementById(`answer${i + 1}`).classList.add('incorrect');
+                }
             }
+            document.getElementById('result').innerText = `Сиздин жообуңуз: ${correct} из 3 туура.`;
         }
-
-        function nextQuestion() {
-            const currentQuestion = questions[currentQuestionIndex];
-            document.getElementById('question').innerText = currentQuestion.question;
-            const optionsButtons = document.querySelectorAll('.option');
-            optionsButtons.forEach((button, index) => {
-                button.innerText = currentQuestion.options[index];
-                button.onclick = () => selectOption(currentQuestion.options[index]);
-            });
-        }
-
-        function selectOption(selectedOption) {
-            const currentQuestion = questions[currentQuestionIndex];
-            if (selectedOption === currentQuestion.answer) {
-                score++;
-                document.getElementById('score-value').innerText = score;
-            }
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                nextQuestion();
-            } else {
-                clearInterval(timer);
-                alert('Quiz completed! Your score: ' + score);
-            }
-        }
-
-        function showHint() {
-            const currentQuestion = questions[currentQuestionIndex];
-            alert('Hint: ' + currentQuestion.hint);
-        }
-
-        window.onload = startQuiz;
     </script>
 </body>
 </html>
