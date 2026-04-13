@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List App</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #task-input { width: 80%; padding: 10px; margin-bottom: 10px; }
+        #add-task { padding: 10px; }
+        ul { list-style-type: none; padding: 0; }
+        li { display: flex; justify-content: space-between; margin: 5px 0; }
+        .completed { text-decoration: line-through; color: gray; }
+    </style>
+</head>
+<body>
+    <h1>To-Do List</h1>
+    <input type="text" id="task-input" placeholder="Add a new task..." />
+    <button id="add-task">Add Task</button>
+    <ul id="task-list"></ul>
+
+    <script>
+        const taskInput = document.getElementById('task-input');
+        const addTaskButton = document.getElementById('add-task');
+        const taskList = document.getElementById('task-list');
+
+        let tasks = [];
+
+        // Load tasks from localStorage
+        const loadTasks = () => {
+            const storedTasks = localStorage.getItem('tasks');
+            if (storedTasks) {
+                tasks = JSON.parse(storedTasks);
+                tasks.forEach(task => addTaskToDOM(task));
+            }
+        };
+
+        // Save tasks to localStorage
+        const saveTasks = () => {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        };
+
+        // Add task to DOM
+        const addTaskToDOM = (task) => {
+            const li = document.createElement('li');
+            li.textContent = task.text;
+            if (task.completed) li.classList.add('completed');
+
+            // Create delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = () => {
+                tasks = tasks.filter(t => t !== task);
+                saveTasks();
+                taskList.removeChild(li);
+            };
+
+            // Mark as complete
+            li.onclick = () => {
+                task.completed = !task.completed;
+                saveTasks();
+                li.classList.toggle('completed');
+            };
+
+            li.appendChild(deleteButton);
+            taskList.appendChild(li);
+        };
+
+        // Add task
+        addTaskButton.onclick = () => {
+            const taskText = taskInput.value.trim();
+            if (taskText) {
+                const newTask = { text: taskText, completed: false };
+                tasks.push(newTask);
+                addTaskToDOM(newTask);
+                saveTasks();
+                taskInput.value = '';
+            }
+        };
+
+        loadTasks();
+    </script>
+</body>
+</html>
