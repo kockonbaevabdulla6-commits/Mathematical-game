@@ -498,28 +498,6 @@
             display: block;
         }
 
-        .btn-hint {
-            background: #ffc107;
-            color: #333;
-            display: none;
-            flex: 0.5;
-        }
-
-        .btn-hint:hover {
-            background: #ffb300;
-            transform: translateY(-2px);
-        }
-
-        .btn-hint.show {
-            display: block;
-        }
-
-        .btn-hint.used {
-            background: #ddd;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
         .btn-restart {
             background: #667eea;
             color: white;
@@ -755,7 +733,6 @@
                 <button class="submit-btn" id="submit-btn">Жөнөт</button>
             </div>
 
-            <button class="btn btn-hint" id="hint-btn">💡 Подсказка</button>
             <div class="hint" id="hint"></div>
             <div class="feedback" id="feedback"></div>
         </div>
@@ -998,8 +975,6 @@
             document.getElementById('feedback').classList.remove('show', 'correct', 'incorrect');
             document.getElementById('hint').classList.remove('show');
             document.getElementById('next-btn').classList.remove('show');
-            document.getElementById('hint-btn').classList.remove('used');
-            document.getElementById('hint-btn').classList.add('show');
 
             const typeLabel = question.type === 'varkymdar' ? '📋 Вариянттуу' : '✍️ Жазуу';
             document.getElementById('question-type').textContent = typeLabel;
@@ -1053,19 +1028,7 @@
                 showFeedback(`✗ Каталуу жооп. Туура жооп: ${question.options[question.answer]}`, 'incorrect');
             }
 
-            document.getElementById('hint-btn').classList.remove('show');
             document.getElementById('next-btn').classList.add('show');
-        }
-
-        function showHint() {
-            if (!answered && !hintUsed) {
-                hintUsed = true;
-                const hint = document.getElementById('hint');
-                hint.textContent = '💡 ' + questions[currentQuestion].hint;
-                hint.classList.add('show');
-                document.getElementById('hint-btn').classList.add('used');
-                document.getElementById('hint-btn').disabled = true;
-            }
         }
 
         function showFeedback(message, type) {
@@ -1144,7 +1107,6 @@
             document.getElementById('restart-btn').classList.add('show');
         }
 
-        document.getElementById('hint-btn').addEventListener('click', showHint);
         document.getElementById('next-btn').addEventListener('click', nextQuestion);
         document.getElementById('restart-btn').addEventListener('click', () => {
             document.getElementById('start-screen').classList.remove('hidden');
